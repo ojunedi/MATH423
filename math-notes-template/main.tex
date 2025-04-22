@@ -181,18 +181,18 @@ Last week we proved the "higher payoff-higher price" lemma and we used it to pro
  $$
  Another inequality that holds is
  $$
- C_e(t,T,K) \geq (S_t - K\cdotB(t,T))^+
+ C_e(t,T,K) \geq (S_t - K\cdot B(t,T))^+
  $$
 \pf{
 By the Put-Call parity we know that
 \begin{align*}
   C_e(t,T,K) &- P_e(t,T,K)  = S_t - K\cdot B(t,T)   \\
   C_e(t,T,K) &= S_t - K\cdot B(t,T) + P_e(t,T,K)  \\
-  &\geq S_t - K \cdot B(t, Y)
+  &\geq S_t - K \cdot B(t, T)
 \end{align*}
 since also $C_\euro(t, T, K) \geq 0$ it follows that
 \begin{align*}
-    C_\euro(t,T,K) &\geq \{0, S_t - K \cdot B(t, T)\} \\
+    C_\euro(t,T,K) &\geq \max\{0, S_t - K \cdot B(t, T)\} \\
     &= (S_t - K\cdot B(t,T))^{+}
 \end{align*}
 }
@@ -267,18 +267,19 @@ We only prove the right part
         $$
         \item From bonds sold at time $t_0$ we must pay $\frac{K}{B(t_0, T)}$ dollars
     \end{itemize}
+
     Nothing else happens so check balance:
     $$
         \frac{M}{B(t,T)} + \frac{K}{B(t,T)} - \frac{K}{B(t_0, T)}
     $$
 
     $$
-        \frac{M}{B(t,T)} + K\left(\frac{1}{B(t,T)} - \frac{1}{B(t_0, T)}\right)
-
+        \frac{M}{B(t,T)} + K \left( \frac{1}{B(t,T)} - \frac{1}{B(t_0, T)} \right)
     $$
 
     where $\frac{1}{B(t,T)} - \frac{1}{B(t_0, T)} \geq 0$ because
         $B(t,T) = (1+r_e)^{t-T} \leq (1+r_e)^{t_0-T} = B(t_0, T)$ since $t_0 \geq t$
+
 
 
     \underline{Case 2} The American Option we sold is never exercised. Thus we go
@@ -363,21 +364,21 @@ $$
 Under the binomial model, the returns at different steps are independent random
 variables, with:
 
-$R(n)=$
+$R(n)=
 \begin{cases}
 U & \text{with probability } p\\
 D  & \text{with probability } 1-p
-\end{cases}
+\end{cases}$
 
 for all $n \in [1, 2, \cdots, N]$, where: $-1 < D < U$ \\
 
 using the equality for returns the previous equality becomes:
 
-$S(n+1)=$
+$S(n+1)=
 \begin{cases}
 S(n)(1+U) & \text{with probability } p\\
 S(n)(1+D)  & \text{with probability } 1-p
-\end{cases}
+\end{cases}$
 
 for $n \in \{0, 1, \cdots N-1 \}$
 
@@ -430,7 +431,7 @@ so that $B(nh, mh) = (1+r_h)^{n-m}$. For a single step ($m=n+1$), $B(nh, (n+1)h)
 $$
     \frac{B((n+1)h, (n+1)h - B(nh, (n+1)h}{B(nh, n(+1)h} = r_n \rightarrow \text{interest rate b/w consecutive steps}
 $$
-\thmr{}{mybigthm}{
+\thmr{}{}{
     Under the Binomial model, to have no arbitrage we require:
     $$D < r_n < U$$
     between 2 consecutive steps, the bond's return must be strictly between the
@@ -579,10 +580,10 @@ $$
 where expectation $\mathbb{E}^{p*}$ is taken in an "artificial" regime where:
 
 
-$S(n+1)=$\begin{cases}
+$S(n+1)=\begin{cases}
 S(n)(1+U) & \text{with probability } p^* = \frac{r_n-D}{U-D} \\
 S(n)(1+D)  & \text{with probability } 1-p^*
-\end{cases}
+\end{cases}$
 
 
 Thus we deduce that we can rewrite the above as
@@ -590,7 +591,7 @@ $$
 P(n) = \frac{1}{1+r_n}\mathbb{E}^{p^*}(P(n+1)|\mathcal{F}_n)
 $$
 
-Dividing now by $(1_r_n)$ and defining $\tilde{P}(k) = \frac{P(k)}{(1+r_n)^k}$ we get
+Dividing now by $(1_{r_n})$ and defining $\tilde{P}(k) = \frac{P(k)}{(1+r_n)^k}$ we get
 which is the price of the option at time $k$ discounter to time $0$ where the discount
 factor is $(1+r_n)^k = B(0, kh)$:
 we get from the last equality:
@@ -626,6 +627,9 @@ $$
 
 for any $k \in \{0, 1, \cdots, n\}$ giving the option price
 at ANY step before $n+1$
+
+\section{Lecture 25}
+
 
 
 
