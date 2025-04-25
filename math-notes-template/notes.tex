@@ -230,4 +230,527 @@ at any previous time $t \leq T$
         \item A portfolio with 1 call and -1 Put, both with strike $K$ and maturity $T$
         \item A long forward position with forward price $K$ and delivery $T$
     \end{enumerate}
+    so the above equality is $V_1(T) = V_2(T)$ so by the previous corollary $V_1(t) = V_2(t)$ or in other words
+    $C_e(t,T,K) - P_e(t,T,K) = S_t - K\cdot B(t,T)$
 }
+}
+\section{Properties of European and American Options (Lecture 22)}
+Last week we proved the "higher payoff-higher price" lemma and we used it to prove
+ the Put-Call Parity:
+
+ $$
+ C_\euro(t, T, K) - P_\euro(t, T, K)  = S_t - K \cdot B(t,T)
+ $$
+ where the right hand side is the long forward position at time $t$, which agrees with
+ $(F(t,T) -F(t_0, T)) \cdot B(t,T)$ which we already knew when forward contract is made
+ at time $t_0 \leq t$. To verify that, recall then $F(t,T) = \frac{S_t}{B(t,T)}$ and
+ $F(t_0, T) = K$: forward price used in the contract of this forward position.
+ We can also prove that
+ $$
+    C_\euro(t,T,K) < S_t
+ $$
+ Indeed, for $t=T$ this reduces to
+ $$
+    C_\euro(T,T,K) = (S_T - K)^+ < (S_T)^+ = S_T
+ $$
+ because $f(x) = x^+$ is increasing.
+ Then we just apply the "higher payoff-higher price" for one product being the
+ stock and the other the call option to get the same result for any $t \leq T$:
+ $$
+ C_e(t,T,K) < S_t
+ $$
+ Another inequality that holds is
+ $$
+ C_e(t,T,K) \geq (S_t - K\cdot B(t,T))^+
+ $$
+\pf{
+By the Put-Call parity we know that
+\begin{align*}
+  C_e(t,T,K) &- P_e(t,T,K)  = S_t - K\cdot B(t,T)   \\
+  C_e(t,T,K) &= S_t - K\cdot B(t,T) + P_e(t,T,K)  \\
+  &\geq S_t - K \cdot B(t, T)
+\end{align*}
+since also $C_\euro(t, T, K) \geq 0$ it follows that
+\begin{align*}
+    C_\euro(t,T,K) &\geq \max\{0, S_t - K \cdot B(t, T)\} \\
+    &= (S_t - K\cdot B(t,T))^{+}
+\end{align*}
+}
+
+\defn{American Option}{
+    An American Option is like an European Option but its holder can
+    exercise it at ANY time before maturity $T$
+}
+\rmkb{
+$C_A(t, T, K)$: American Call Option at time $t \leq T$, when $K$ is the strike and $T$ is
+the maturity.
+}
+
+Properties similar to those of $P_e(t, T, K)$ and $C_e(t, T, K)$ hold for $P_A(t, T, K)$ and
+$C_A(t, T, K)$, but the "higher payoff-higher price" lemma cannot be used to prove those,
+since the payoffs of Americans are not certainly paid at time $T$. Thus we prove such
+properties by the standard no-arbitrage arguments
+
+\ex{
+    We have something similar to the Put-Call Parity:
+    $$
+    S_t - K\cdot B(t,T) \geq C_A(t,T,K)-P_A(t,T,K) \geq S_t - K
+    $$
+}
+
+Let's prove the above statement in the example
+\pf{
+We only prove the right part
+    $$C_A(t,T,K)-P_A(t,T,K) \geq S_t - K$$
+    First we rearrange
+    $$C_A(t,T,K)+ K \geq S_t + P_A(t,T,K) $$
+    Suppose for the sake of contradiction we have
+    $$ C_A(t,T,K) + K < S_t + P_A(t,T,K) $$
+    $C_A(t,T,K)$ is American Call Price at time $t$, $K$ is the value at time $t$ of
+    $\frac{K}{B(t,T)}$ units of bond that pays 1 dollar at time $T$, each worth $B(t,T)$.
+    $P_A(t,T,K)$ American Put Price as time $t$ and $S_t$ is the stock price at time $t$.
+    $C_A$ and $K$ are on the small side, so undervalued and the other products are on the big
+    side so they are overvalued. Now we just follow the standard procedure. \\
+    \underline{At time $t$}
+    \begin{itemize}
+        \item Issue and sell an American Put to get $P_A(t,T,K)$ dollars
+        \item Short sell the stock to get $S_t$ dollars
+        \item Buy an American Call by paying $C_A(t,T,K)$
+        \item Buy $\frac{K}{B(t,T)}$ units of bond each for $B(t,T)$ dollars, paying $K$
+        dollars in total
+    \end{itemize}
+    \underline{Our Balance}
+    $$
+    M = P_A(t,T,K) + S_t - (C_A(t,T,K) + K) > 0
+    $$
+    \underline{Optimal action}: Invest $M$ in bonds, by buying $\frac{M}{B(t,T)}$ units,
+    each worth $B(t,T)$ dollars so we pay $M$ dollars. So now our balance becomes 0. \\
+    Normally we would go to time $T$, but there is a possibility that the American
+    option we sold is exercised before that!
+    \underline{Consider 2 cases:}\\
+    \underline{Case 1:} American Put we shold is exercised at some $t_0 \in [t, T]$. Then we
+    go to time $t_0$.
+    \underline{At time $t_0$}: We have the obligation to buy from the option holder,
+    the stock for $K$ dollars. Thus, borrow $K$ dollars by issuing and selling
+    $\frac{K}{B(t_0, T)}$ that pays 1 dollar at time $T$, each worth $B(t_0, T)$ since we
+    are now at time $t_0$, so we receive $K$ dollars. Then, give those dollars to option
+    holder who exercised it to get the stock. \\
+    \underline{At time T}:
+    \begin{itemize}
+        \item
+            We have a stock received at time $t_0$ but also an open
+            short-selling position on the stock at time $t$. Thus we just deliver the stock to close
+            the position.
+        \item From bonds bought at time $t$, earn
+        $$
+        \frac{M}{B(t,T)} + \frac{K}{B(t,T)} \text{ dollars}
+        $$
+        \item From bonds sold at time $t_0$ we must pay $\frac{K}{B(t_0, T)}$ dollars
+    \end{itemize}
+
+    Nothing else happens so check balance:
+    $$
+        \frac{M}{B(t,T)} + \frac{K}{B(t,T)} - \frac{K}{B(t_0, T)}
+    $$
+
+    $$
+        \frac{M}{B(t,T)} + K \left( \frac{1}{B(t,T)} - \frac{1}{B(t_0, T)} \right)
+    $$
+
+    where $\frac{1}{B(t,T)} - \frac{1}{B(t_0, T)} \geq 0$ because
+        $B(t,T) = (1+r_e)^{t-T} \leq (1+r_e)^{t_0-T} = B(t_0, T)$ since $t_0 \geq t$
+
+
+
+    \underline{Case 2} The American Option we sold is never exercised. Thus we go
+    directly to time $T$ \\
+    \underline{At time T}: \\
+    Again, we must clos short-selling made at time t, but now we do not posses a stock in
+    this second case. Thus we exercise the American call we hold (which we didn't have
+    to do in case 1) to get the stock for $K$ dollars, and we deliver the stock to close
+    short-selling. Then, we also earn from bonds bought at time $t$:
+    $$
+        \frac{M}{B(t,T)} + \frac{K}{B(t,T)} \text{ dollars}
+    $$
+    So our balance is
+    $$
+        \frac{M}{B(t,T)} + \frac{K}{B(t,T)} - K \text{ dollars}
+    $$
+    $$
+        \frac{M}{B(t,T)} + K\left(\frac{1}{B(t,T)} - 1\right)  > 0
+    $$
+    because $B(t T) = (1+r_e)^{t-T} < 1$ since $t<T$. Thus started with 0 money and ended
+    up with positive balance which is arbitrage $\rightarrow$ Contradiction.
+}
+
+\thmr{}{}{
+    Consider 2 options $A$, $B$ with prices $A(t)$ and $B(t)$ respectively at any time $t$.
+    If the holder of $A$ can also use it exactly as $B$, then $A(t) \geq B(t)$ for all $t$
+}
+Sketch of proof. Suppose $A(t) < B(t)$. So we issue and sell $B$, buy $A$ and invest the
+positive balance $B(t) - A(t)$ in bonds (all at time $t$). Now when $B$ is exercised, we
+exercise $A$ using it exactly as $B$, so we earn from $A$ exactly what we must pay to the one
+who exercises $B$. Thus we are only left with our investments in bonds, which leads to
+arbitrage. \\
+\\
+Consequences of the above theorem
+\begin{enumerate}
+    \item $C_A(t, T, K) \geq C_e(t, T, K)$ and $P_A(t,T,K) \geq P_e(t, T, K)$ because an
+    American Option can be used exactly as the corresponding European Option (just by deciding
+    to exercise at time $T$)
+    \item American Options with more distant maturities have higher prices
+    $C_A(t, T, K) \geq C_A(t, T', K)$ and $P_A(t,T,K) \geq P_A(t, T', K)$ whenever
+    $T \geq T'$ because an american with maturity T can be used as the
+\end{enumerate}
+
+
+\section{Option Results \& Binomial Model}
+While we have
+$$
+C_A(t, T, K) \geq C_e(t, T, K)
+$$
+when the stock pays no dividends we actually have
+$$
+C_A(t, T, K) = C_e(t, T, K)
+$$
+and it is optimal for an investor to exercise the American at time $T$
+
+We have obtained various identities and bounds for option prices, but to explicitly
+compute those prices we need to know how the price $S_t$ of the underlying stock
+evolves with time $t$.
+
+We focus on $2$ models:
+\begin{enumerate}
+    \item The Binomial model (Discrete time)
+    \item The Black-Scholes model (Continuous time)
+\end{enumerate}
+
+\subsection{The Binomial Model}
+Given a time period $[0, T]$, a stock $S$ with price $S_t$ at time $t \in [0.T]$, and
+a bond that pays 1 dollar at time $T$ with price $B(t, T)$ at time $t \in [0.T]$
+
+Everything (changes in the stock price and interest compounding which changes bond
+prices) happen at the following times: \\
+
+$t = 0, t = h, t = 2h, \cdots t = Nh = T$ i.e prices change every $h$ units of time
+and there are $N = \frac{T}{h}$ steps in total. Let $S(n) = S_{nh}$ (stock price
+at the n-th step). \\
+
+\underline{Stock return:}
+$$
+    R(n+1) = \frac{S(n+1) - S(n)}{S(n)}
+$$
+
+Under the binomial model, the returns at different steps are independent random
+variables, with:
+
+$R(n)=
+
+U & \text{with probability } p\\
+D  & \text{with probability } 1-p
+\end{cases}$
+
+for all $n \in [1, 2, \cdots, N]$, where: $-1 < D < U$ \\
+
+using the equality for returns the previous equality becomes:
+
+$S(n+1)=
+\begin{cases}
+S(n)(1+U) & \text{with probability } p\\
+S(n)(1+D)  & \text{with probability } 1-p
+\end{cases}$
+
+for $n \in \{0, 1, \cdots N-1 \}$
+
+We can now compute the price:
+\begin{align*}
+    S(n) &= S(n-1) \cdot (1 + R(n)) \\
+        &= S(n-2) \cdot(1 + R(n-1)) \cdot (1 + R(n)) \\
+        &\hspace{5em}\vdots\\
+        &= S(0) \cdot \prod_{i=1}^n(1+R(i)) \\
+        &= S(0) \cdot (1 + U)^k \cdot (1 + D)^{n-k}
+\end{align*}
+where $k$ is the number of the returns $R(i)$ that equal $U$, so
+remaining $n-k$ are equal to $D$.
+
+\underline{Notation:} If we observe the returns $R(1), R(2), \cdots, R(n)$ until
+the $n$-th step, we write:
+$S^{R(1)R(2) \cdots R(n)}(n)$ for the price of the stock at the $n$-th step under
+those observed returns. \\
+\ex{
+    $S^{UUD}(3)$ the price of the stock at the 3rd step when $R(1) = U$,
+    $R(2) = U$, and $R(3) = D$ which is equal $S(0) \cdot (1+U)^2 \cdot (1+D)$
+}
+
+If $\Omega$ is the underlying sample space, each evolution scenario for the market
+scenario for the market corresponds to a $\omega \in \Omega$, which can be identified
+with the sequence of returns $R(i)(\omega)$ under that $\omega$
+$$
+\omega = R(1)(\omega)R(2)(\omega) \cdots R(N)(\omega)
+$$
+
+Consider now one possible price at step $n$:
+$$
+    S(0)(1+U)^k \cdot (1+D)^{n-k}
+$$
+The probability of the price at time $n$ being exactly the above for fixed
+$n$ and $k$ is precisely:
+$$
+    \Pr(S(n) = S(0)(1+U)^k \cdot (1+D)^{n-k}) = \binom{n}{k}p^k(1-p)^{n-k}
+$$
+
+\underline{Bond Prices:} \\
+Consider a bond that pays $1$ dollar at step $m$ (time $m \cdot h$). Its price
+at step $n \leq m$ (time $n\cdot h$) is then
+\begin{align*}
+    B(nh, mh) &= (1+r_e)^{-(mh-nh)} \\
+              &= ((1+r_e)^h)^{(n-m)}
+\end{align*}
+so that $B(nh, mh) = (1+r_h)^{n-m}$. For a single step ($m=n+1$), $B(nh, (n+1)h) =
+\frac{1}{1+r_n}$. The bond's return in $[nh, (n+1)h]$ is then:
+$$
+    \frac{B((n+1)h, (n+1)h - B(nh, (n+1)h}{B(nh, n(+1)h} = r_n \rightarrow \text{interest rate b/w consecutive steps}
+$$
+\thmr{}{}{
+    Under the Binomial model, to have no arbitrage we require:
+    $$D < r_h < U$$
+    between 2 consecutive steps, the bond's return must be strictly between the
+    2 possible returns of the stock.
+    \pf{
+        We prove $r_h < U$. Suppose for contradiction $r_h \geq U$ so that
+        $r_h \geq U > D$ this means that the bond has for sure
+        a better return compared to the stock, so we buy it by
+        short selling the stock. \\
+        \underline{At time 0}: Short sell the stock to earn $S(0)$ which we
+        invest in buying bonds that pay $1$ dollar at the next step, each bond
+        is worth $B(0,h)$, so we by $\frac{S(0)}{B(0,h)}$ units. \\
+        \underline{At time h (step 1)}: We earn $\frac{S(0)}{B(0,h)} = S(0)
+        \cdot(1+r_h)$ dollars. We must close short selling, so we pay $S(1)$ to
+        buy the stock and we deliver it to close short selling. Our balance
+        at this point is now
+        \begin{align*}
+            S(0) \cdot (1+r_h) - S(1)  &= S(0)(1+r_h) - S(0)(1+R(1)) \\
+            &= S(0)(r_h-R(1)) \\
+            &= S(0)
+                \begin{cases}
+                    r_h - U & \text{with probability } p\\
+                    r_h - D  & \text{with probability } 1-p
+                \end{cases}
+        \end{align*}
+        which is certainly $\geq 0 $ since $r_h \geq U > D$ and with
+        \underline{positive probability $1-p > 0$} it is a strictly
+        positive profit of $r_h - D > 0$. This is arbitrage, thus we have
+        reached a contradiction.
+    }
+}
+
+
+
+\section{Lecture 24}
+\subsection{Self Financing Property}
+Suppose at the $n$-th step we hold $\alpha_S(n)$ units of stock
+(each unit workh $S(n)$) and $\alpha_B(n)$ units of bond that pays
+1 dollar at step $N$ (each unit worth $B(nh, T)$), so our portfolio
+has value
+\begin{equation}
+    V(n) = \alpha_S(n)S(n) + \alpha_B(n)B(nh, T)
+\end{equation}
+
+At the next step, values of products change the stock $S(n) \longrightarrow S(n+1)$
+and the bond $B(nh, T) \longrightarrow B((n+1)h, T) = B(nh,T)(1+r_n)$ so our
+portfolio value becomes
+
+\begin{equation}
+    V(n+1) = \alpha_S(n)S(n+1) + \alpha_B(n)B((n+1)h, T)
+\end{equation}
+
+Then, we can rebalance: sell stocks and use money earned to buy bonds
+or the opposite, so amounts of assets we hold change:
+$\alpha_S(n) \rightarrow \alpha_S(n+1)$ and
+$\alpha_B(n) \rightarrow \alpha_B(n+1)$
+However if no extra money is added no money is put aside
+the value of the portfolio remains the same after $\alpha_S(n)$ and
+$\alpha_B(n)$ change ({\color{red} self-financing property})
+\begin{equation}
+    V(n+1) = \alpha_S(n+1)S(n+1) + \alpha_B(n+1)B((n+1)h, T)
+\end{equation}
+
+Subtracting 2.3 from 2.2 we get the {\color{red} Self-financing property}
+\begin{equation}
+    0 = (\alpha_S(n+1) - \alpha_S(n))\cdot S(n+1) + (\alpha_B(n+1) - \alpha_B(n))\cdot B((n+1)h, T)
+\end{equation}
+
+Alternatively we can subtract 2.2 from 2.1 to find
+\begin{equation*}
+    V(n+1) - V(n) = \alpha_S(n) \cdot (S(n+1) - S(n)) + \alpha_B(n) \cdot (B((n+1)h, T) - B(nh, T))
+\end{equation*}
+\subsection{Hedging and Pricing}
+Suppose that aprt from bond and stock we have an option, whose value at step
+$n+1$ is:
+\begin{equation*}
+    P(n+1) = H_{n+1}(S(n+1))
+\end{equation*}
+e.g if the option is a European Call maturing at step $n+1$: $H_{n+1}(x) = (x-K)^+$
+\subsubsection{How to find option price $P(n)$ at the previous step n?}
+The idea is to construct a portfolio at step $n$, whose price at step $n+1$ will always
+coincide with the option price at step $n+1$, by approximately selecting the $\alpha_S(n)$ and
+$\alpha_B(n)$ that do the work. There are two scenarios
+\begin{enumerate}[(a)]
+    \item with probability $p$ \\
+    the portfolio value becomes
+        \begin{align*}
+            V(n+1) &= \alpha_S(n) S(n+1) + \alpha_B(n) B((n+1)h, T) \\
+                &= \alpha_S(n) S(n)(1+U) + \alpha_B(n) B((n+1)h, T)
+        \end{align*}
+        the option value becomes
+        \begin{equation*}
+            P(n+1) = H_{n+1}(S(n+1)) = H_{n+1}(S(n)(1+U))
+        \end{equation*}
+    \item with probability $1-p$ \\
+    the portfolio value becomes
+        \begin{align*}
+            V(n+1) &= \alpha_S(n) S(n+1) + \alpha_B(n) B((n+1)h, T) \\
+                &= \alpha_S(n) S(n)(1+D) + \alpha_B(n) B((n+1)h, T)
+        \end{align*}
+        the option value becomes
+        \begin{equation*}
+            P(n+1) = H_{n+1}(S(n+1)) = H_{n+1}(S(n)(1+D))
+        \end{equation*}
+\end{enumerate}
+
+We want the portfolio value to coincide with the option value at step $n+1$:
+$$
+    V(n+1) = P(n+1)
+$$
+under both scenarios, so that by the "Higher payoff- higher price" lemma we will then
+have equality of values at step $n$
+$$P(n)=V(n)$$
+Requiring that $V(n+1) = P(n+1)$ under both scenarios gives a 2x2 system which solving
+yields
+$$
+    \alpha_S(N) = \frac{1}{S(n)} \cdot \frac{H_{n+1}(S(n)(1+U))-H_{n+1}(S(n)(1+D))}{U-D}
+$$
+and
+$$
+    \alpha_B(N) = \frac{1}{S(n)} \cdot \frac{H_{n+1}(S(n)(1+U))-H_{n+1}(S(n)(1+D))}{(D-U)(1+r_n)^{n+1-N}}
+$$
+as expected those only depend on $S(n)$ and deterministic quantities, so they are known at step
+$n$. Now, by what we said above, our option price at step $n$ is
+$$
+P(n) = V(n) = \alpha_S(n)S(n) + \alpha_B(n)B(nh, T)
+$$
+where we can plug the $\alpha_S(n)$, and $\alpha_B(n)$ we computed to find:
+$P(n) = \cdots = H_n(S(n))$
+
+so again it is a function of the stock price at the step at which the option price is
+computed. However at this step $n$:
+\begin{equation*}
+    H_n(x) = \frac{1}{1+r_n} \left(\frac{U-r_n}{U-D}H_{n+1}((1+D)x) + \frac{r_n - D}{U-D}H_{n+1}
+    ((1+U)x)\right)
+\end{equation*}
+
+which differs from the $H_{n+1}(x)$ that we have the next step $n+1$
+
+Now we write:
+
+$$
+P(n) = \frac{1}{1+r_n}\mathbb{E}^{p^*}(H_{n+1}(S(n+1)) |\mathcal{F}_n)
+$$
+
+where expectation $\mathbb{E}^{p*}$ is taken in an "artificial" regime where:
+
+
+$S(n+1)=\begin{cases}
+S(n)(1+U) & \text{with probability } p^* = \frac{r_n-D}{U-D} \\
+S(n)(1+D)  & \text{with probability } 1-p^*
+\end{cases}$
+
+
+Thus we deduce that we can rewrite the above as
+$$
+P(n) = \frac{1}{1+r_n}\mathbb{E}^{p^*}(P(n+1)|\mathcal{F}_n)
+$$
+
+Dividing now by $(1_{r_n})$ and defining $\tilde{P}(k) = \frac{P(k)}{(1+r_n)^k}$ we get
+which is the price of the option at time $k$ discounter to time $0$ where the discount
+factor is $(1+r_n)^k = B(0, kh)$:
+we get from the last equality:
+\begin{equation*}
+    \tilde{P}(n) = \mathbb{E}^{p^*}(\tilde{P}(n+1)|\mathcal{F}_n)
+\end{equation*}
+
+{\color{red} This is the martingale property of the discounted price $\tilde{P}(n)$}
+and because we also have:
+$$
+\tilde{P}(n-1) = \mathbb{E}^{p^*}(\tilde{P}(n)|\mathcal{F}_{n-1})
+$$
+
+we can get:
+
+$$
+    \tilde{P}(n-1) = \mathbb{E}^{p^*}( \mathbb{E}^{p^*}(\tilde{P}(n+1)|\mathcal{F}_n)
+ | \mathcal{F}_{n-1})
+$$
+
+notice here we are conditioning on $\mathcal{F}_{n-1}$ plus things observed at step $n$
+so by the tower rule the inner expectation disappears and we get:
+
+$$
+    \tilde{P}(n-1) = \mathbb{E}^{p^*}(\tilde{P}(n+1)|\mathcal{F}_{n-1})
+$$
+
+which can be extended to any step $k$:
+
+$$
+    \tilde{P}(n-k) = \mathbb{E}^{p^*}(\tilde{P}(n+1)|\mathcal{F}_{n-k})
+$$
+
+for any $k \in \{0, 1, \cdots, n\}$ giving the option price
+at ANY step before $n+1$
+
+\section{Lecture 25}
+skip for now
+\section{Lecture 26}
+Went over but lots of diagrams so lowkey dont want to type it up
+\section{Brownian motion and Ito's calculus (Lecture 27)}
+In Continuous time models we will only cover the Black-Scholes model. In this lecture we develop
+the necessary mathematical tools.
+
+Start with a probability space
+
+$$
+    (\Omega, \mathcal{F}, \mathbb{P})
+$$
+\defn{Continuous Time Stochastic Process}{
+    A continuous time stochastic process is a function $X$ that maps any $(t,\omega)$
+    for $t \geq 0$ and $\omega \in \Omega$ to the value $X(t,\omega)$ which describes the value
+    of a randomly evolving quantity (e.g a stock price) at time $t$ under scenario $\omega$
+}
+\begin{itemize}
+    \item For a fixed outcome $\omega$: $X(\cdot, \w)$ is a function of the time variable $t$, which maps any
+        time $t$ to the value $X(t, \w)$ (describes the evolution of the process with time, under a fixed
+        scenario/outcome $\w$)
+    \item For a time $t$: $X(t, \cdot)$ is a random variable that describes the possible values of the
+        process at a fixed time $t$, under different scenarios/outcomes $\w$
+\end{itemize}
+\defn{Brownian Motion}{
+    A stochastic process $W$ that maps any time $t$ and outcome $\w$ to $W(t,\w) = W_t$ is called a
+    Brownian motion when:
+    \begin{enumerate}
+        \item $W_0=W(0,\w) = 0$
+        \item The function $W(\cdot, \w)$, which is a function of $t$, is a \textit{continuous function} of
+        $t$ under any possible scenario $\w$
+        \item For $t_1 \leq t_2 \leq \cdots \leq t_n$, the increments $W(t_n, \cdot) - W(t_{n-1},\cdot)$,
+        $W(t_{n-1}, \cdot) - W(t_{n-2},\cdot)$, $\cdots$, $W(t_2, \cdot) - W(t_1, \cdot)$ (increments over
+        non-lapping intervals) are \textit{independent} random variables.
+        \item For $t \geq s$
+            $$
+                W(t, \cdot)-W(s, \cdot) \sim N(0, t-s)
+            $$
+    \end{enumerate}
+}
+
+
+
+\end{document}
+
