@@ -38,6 +38,7 @@
 % The theorem system and user-defined commands
 \input{theorems.tex}
 \input{commands.tex}
+\newcommand{\w}{\omega}
 
 % ------------------------------------------------------------------------------
 
@@ -153,7 +154,86 @@ save or lose anything otherwise. The payoff at time $T$ is
 $$
 (K-S_T)^+ = \max(K-S_T, 0)
 $$
+\subsection*{Notation}
+\begin{itemize}
+    \item $C_e(t,T,K)$: the value at time $t \leq T$ of European Call Option with
+    maturity $T$ and strike $K$
+    \item $P_e(t, T, K)$ the value at time $t \leq T$ of European Put Option with maturity
+    $T$ and strike $K$
+\end{itemize}
+so clearly for $t=T$:
+$$
+    C_e(t,T,K) = (S_T-K)^+
+$$
+$$
+    P_e(t,T,K) = (K-S_T)^+
+$$
 
+We want to be able to compute the prices of these options for any time $t \leq T$, but this
+requires a certain model for now the price $S_t$ of the underlying asset evolves with time $t$. However, some properties can be obtained even without a model. The first being
+
+$$
+    (S_T-K)^+ - (K-S_T)^+ = S_T - K
+$$
+which is equivalently:
+$$
+    C_e(T,T,K) - P_e(T, T, K) = S_T - K
+$$
+which can be extended to \textit{any} time $t \leq T$ as:
+$$
+    C_e(t,T,K) - P_e(t, T, K) = S_T - K \cdot B(t, T)
+$$
+{\color{red} This is the Put-Call Parity}
+
+\lem{Higher payoff Higher price Lemma}{
+Consider 2 products with values $V_1(t)$ and $V_2(t)$ at time $t$ respectively.
+We say that if $V_1(T) > V_2(T)$ for any $\omega \in \Omega$ then $V_1(t) > V_2(t)$
+at any previous time $t \leq T$
+\pf{
+    Suppose $V_1(T) > V_2(T)$ for all $\omega \in \Omega$ but $V_1(t) \leq V_2(t)$ (so $V_1(t)$ is undervalued at time $t$ and $V_2(t)$ is overvalued)\\
+    Then at time $t$:
+        \begin{itemize}
+            \item Short sell product 2 to earn $V_2(t)$ dollars
+            \item Buy product 1 by paying $V_1(t)$ dollars
+            \item Invest the difference in bonds
+        \end{itemize}
+    \newline 
+    At time $T$:
+        \begin{itemize}
+            \item Earn $V_1(t)$
+            \item Pay $V_2(t)$ to buy product 2 and deliver it to close short selling position
+            \item Receive $\frac{V_2(t) - V_1(t)}{B(t, T)}$ dollars from bonds 
+        \end{itemize} 
+    \newline 
+    So our balance is 
+    $$
+        V_1(T) - V_2(T) + \frac{V_2(t) - V_1(t)}{B(t,T)}  > 0
+    $$
+    for all $\omega$, which is arbitrage! Contradiction!
+}
+}
+\cor{
+   If $V_1(T) = V_2(T)$ for all $\omega \in \Omega$ we can apply above lemma twice to get
+   $V_1(t) = V_2(t)$ for all $t \leq T$ and for all $\omega \in \Omega$
+}
+
+\thmr{Put-Call Parity}{}{
+  $$ C_e(t,T,K) - P_e(t, T, K) = S_T - K \cdot B(t, T) $$
+\pf{
+    We showed that 
+    $$  
+        C_e(t,T,K) - P_e(t, T, K) = S_T - K
+    $$
+    where the right side is the value of a long forward position at delivery $T$, which equals the payoff
+    So we apply the previous result for the products:
+    \begin{enumerate}
+        \item A portfolio with 1 call and -1 Put, both with strike $K$ and maturity $T$
+        \item A long forward position with forward price $K$ and delivery $T$
+    \end{enumerate}
+    so the above equality is $V_1(T) = V_2(T)$ so by the previous corollary $V_1(t) = V_2(t)$ or in other words
+    $C_e(t,T,K) - P_e(t,T,K) = S_t - K\cdot B(t,T)$
+}
+}
 \section{Properties of European and American Options (Lecture 22)}
 Last week we proved the "higher payoff-higher price" lemma and we used it to prove
  the Put-Call Parity:
@@ -171,7 +251,7 @@ Last week we proved the "higher payoff-higher price" lemma and we used it to pro
  $$
  Indeed, for $t=T$ this reduces to
  $$
-    C_\euro(t,T,K) = (S_T - K)^+ < (S_T)^+ = S_T
+    C_\euro(T,T,K) = (S_T - K)^+ < (S_T)^+ = S_T
  $$
  because $f(x) = x^+$ is increasing.
  Then we just apply the "higher payoff-higher price" for one product being the
@@ -365,7 +445,7 @@ Under the binomial model, the returns at different steps are independent random
 variables, with:
 
 $R(n)=
-\begin{cases}
+
 U & \text{with probability } p\\
 D  & \text{with probability } 1-p
 \end{cases}$
@@ -433,33 +513,33 @@ $$
 $$
 \thmr{}{}{
     Under the Binomial model, to have no arbitrage we require:
-    $$D < r_n < U$$
+    $$D < r_h < U$$
     between 2 consecutive steps, the bond's return must be strictly between the
     2 possible returns of the stock.
     \pf{
-        We prove $r_n < U$. Suppose for contradiction $r_n \geq U$ so that
-        $r_n \geq U > D$ this means that the bond has for sure
+        We prove $r_h < U$. Suppose for contradiction $r_h \geq U$ so that
+        $r_h \geq U > D$ this means that the bond has for sure
         a better return compared to the stock, so we buy it by
         short selling the stock. \\
         \underline{At time 0}: Short sell the stock to earn $S(0)$ which we
         invest in buying bonds that pay $1$ dollar at the next step, each bond
         is worth $B(0,h)$, so we by $\frac{S(0)}{B(0,h)}$ units. \\
         \underline{At time h (step 1)}: We earn $\frac{S(0)}{B(0,h)} = S(0)
-        \cdot(1+r_n)$ dollars. We must close short selling, so we pay $S(1)$ to
+        \cdot(1+r_h)$ dollars. We must close short selling, so we pay $S(1)$ to
         buy the stock and we deliver it to close short selling. Our balance
         at this point is now
         \begin{align*}
-            S(0) \cdot (1+r_n) - S(1)  &= S(0)(1+r_n) - S(0)(1+R(1)) \\
-            &= S(0)(r_n-R(1)) \\
+            S(0) \cdot (1+r_h) - S(1)  &= S(0)(1+r_h) - S(0)(1+R(1)) \\
+            &= S(0)(r_h-R(1)) \\
             &= S(0)
                 \begin{cases}
-                    r_n - U & \text{with probability } p\\
-                    r_n - D  & \text{with probability } 1-p
+                    r_h - U & \text{with probability } p\\
+                    r_h - D  & \text{with probability } 1-p
                 \end{cases}
         \end{align*}
-        which is certainly $\geq 0 $ since $r_n \geq U > D$ and with
+        which is certainly $\geq 0 $ since $r_h \geq U > D$ and with
         \underline{positive probability $1-p > 0$} it is a strictly
-        positive profit of $r_n - D > 0$. This is arbitrage, thus we have
+        positive profit of $r_h - D > 0$. This is arbitrage, thus we have
         reached a contradiction.
     }
 }
@@ -629,8 +709,46 @@ for any $k \in \{0, 1, \cdots, n\}$ giving the option price
 at ANY step before $n+1$
 
 \section{Lecture 25}
+skip for now
+\section{Lecture 26}
+Went over but lots of diagrams so lowkey dont want to type it up
+\section{Brownian motion and Ito's calculus (Lecture 27)}
+In Continuous time models we will only cover the Black-Scholes model. In this lecture we develop
+the necessary mathematical tools.
 
+Start with a probability space
 
+$$
+    (\Omega, \mathcal{F}, \mathbb{P})
+$$
+\defn{Continuous Time Stochastic Process}{
+    A continuous time stochastic process is a function $X$ that maps any $(t,\omega)$
+    for $t \geq 0$ and $\omega \in \Omega$ to the value $X(t,\omega)$ which describes the value
+    of a randomly evolving quantity (e.g a stock price) at time $t$ under scenario $\omega$
+}
+\begin{itemize}
+    \item For a fixed outcome $\omega$: $X(\cdot, \w)$ is a function of the time variable $t$, which maps any 
+        time $t$ to the value $X(t, \w)$ (describes the evolution of the process with time, under a fixed
+        scenario/outcome $\w$)
+    \item For a time $t$: $X(t, \cdot)$ is a random variable that describes the possible values of the
+        process at a fixed time $t$, under different scenarios/outcomes $\w$
+\end{itemize}
+\defn{Brownian Motion}{
+    A stochastic process $W$ that maps any time $t$ and outcome $\w$ to $W(t,\w) = W_t$ is called a
+    Brownian motion when:
+    \begin{enumerate}
+        \item $W_0=W(0,\w) = 0$
+        \item The function $W(\cdot, \w)$, which is a function of $t$, is a \textit{continuous function} of
+        $t$ under any possible scenario $\w$
+        \item For $t_1 \leq t_2 \leq \cdots \leq t_n$, the increments $W(t_n, \cdot) - W(t_{n-1},\cdot)$, 
+        $W(t_{n-1}, \cdot) - W(t_{n-2},\cdot)$, $\cdots$, $W(t_2, \cdot) - W(t_1, \cdot)$ (increments over
+        non-lapping intervals) are \textit{independent} random variables.
+        \item For $t \geq s$
+            $$
+                W(t, \cdot)-W(s, \cdot) \sim N(0, t-s) 
+            $$
+    \end{enumerate}
+}
 
 
 
