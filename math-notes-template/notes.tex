@@ -749,7 +749,130 @@ $$
             $$
     \end{enumerate}
 }
+\subsection*{Calculus of Brownian Motion}
+Let's try to compute the differential
+$$
+    dW_t = W_{t +dt} - W_t
+$$
+\renewcommand{\Var}{\text{Var}}
+\renewcommand{\E}{\mathbb{E}}
+By property 4 of Brownian Motion $dW_t \sim N(0,dt)$ so:
+\begin{itemize}
+    \item $\E(dW_t) = 0$, $\Var(dW_t)=dt$
+    \item $\E((dW_t)^2) = \Var(dW_t) + \E^2(dW_t)  = dt$
+\end{itemize}
+Moreover $\Var((dW_t)^2)$ is proportional to $(dt)^2$ and thus negligible so:
+$$
+    dW_t^2 = \E((dW_t)^2) = dt
+$$
+\subsection*{Recap of ordinary calculus}
+    Consider $z = f(x,y)$, we want to compute $dz$, a small change in $z$ that occurs
+    from a small change $dx$ in $x$ and a small change $dy$ in $y$
+    $$
+        dz = df(x,y) = f(x+dx, y+dy) - f(x,y)
+    $$
+    By taylor expanding we get
+    $$
+        f(x+dx, y+dy) = f(x, y) + f_x(x,y)dx + f_y(x,y)dy + \frac{1}{2}f_{xx}(x,y)(dx)^2 + \frac{1}{2}f_{yy}(x,y)(dy)^2 + f_{xy}(x,y)dx dy
+    $$
+    so we can easily see that
+    $$
+        dz = f_x(x,y)dx + f_y(x,y)dy + \frac{1}{2}f_{xx}(x,y)(dx)^2 + \frac{1}{2}f_{yy}(x,y)(dy)^2 + f_{xy}(x,y)dx dy
+    $$
+    Assume now that $x=x(t)$ and $y=y(t)$, so small changes in those occure from a small chnage dt in $t$. Then:
+    \begin{align*}
+        dz = f_x(x(t),y(t))dx(t) + f_y(x(t),y(t))dy(t) + \frac{1}{2}f_{xx}(x(t),y(t))(dx(t))^2 &+ \frac{1}{2}f_{yy}(x(t),y(t))(dy(t))^2\\ &+ f_{xy}(x(t),y(t))dx(t)dy(t)
+\   \end{align*}
+    Now if $x(t)$, $y(t)$ are differntiable in $t$: $dx(t) = x'(t)dt + O((dt)^2)$ and $dy(t) = y'(t)dt + O((dt)^2)$ which
+    can be plugged into the above equation and we can observe that all terms that are accompanied by a factor of $(dt)^2$,
+    $(dt)^3$ or higher are regarded as $O$ because $(dt)^n$ for $n>1$ is much smaller than $dt$. Then it is easy to see that
+    ALL terms involving 2nd order derivativees will vanish in the equation and it becomes
+    $$
+        dz = f_x(x(t),y(t))x'(t)dt + f_y(x(t),y(t))y'(t)dt
+    $$
+    which is just the standard chain rule of ordinary calculus. \\
 
+    Now we can consider if $x(t) = t$ but $y(t) = W_t$ is a Brownian motion (non-differentiable). We cannot plug into
+    $dy(t) = y'(t)dt + O((dt)^2)$ because $y'(t)$ does not exist. Actually the double derivative with resepect to $y$
+    term becomes
+    $$
+    \frac{1}{2}f_{yy}(x(t),y(t))(dy(t))^2 = \frac{1}{2}f_{yy}(t, W_t)(dW_t)^2 = \frac{1}{2}f_{yy}(t, W_t)dt
+    $$
+
+    \rmkb{
+        other $2$nd order derivatives will still vanish as the $f_{xy}$ term goes with $dW_tdt$ which is also very much
+        smaller than $dt$ and thus is regarded as 0
+    }
+
+    So our differential becomes
+
+    \defn{Itô's Formula}{
+        $$
+            dz = df(t, W_t) = f_x(t, W_t)dt + f_y(t, W_t)dW_t + \frac{1}{2}f_{yy}(t, W_t)dt
+        $$
+    }
+
+    If we integrate the above in $[s,t]$
+    \begin{align*}
+        f(t, W_t) - f(s, W_s) &= \int_s^t df(r, W_r) \\
+                              &= \int_s^t f_x(r, W_r)dr + \int_s^t \frac{1}{2}f_{yy}(r, W_r)dr + {\color{purple}\int_s^t f_y(r, W_r)dW_r} \\
+    \end{align*}
+    where the first two integrals are ordinary integrals and the last one is an {\color{purple}Itô integral}
+    \subsection*{Properties of {\color{purple}Itô integrals}}
+    Lets compute
+    $$
+    \E\left[\int_a^b f(r)dW_r\right] = \int_a^b \E[f(r)dW_r]
+    $$
+    so if we assume that the values of $f$ until any time $s$ are \underline{known} provided that the values of $W$ until
+    that same time are also known then
+    $$
+    \E[f(r)dW_r] = \E[f(r)(W_{r+dr} - W_r)]
+    $$
+    where $W_{r+dr} - W_r$ is independent of $W_r^'$ for $r' \leq r$ and because the latter fully determine the value of
+    $f(r)$, $W_{r+dr} - W_r$ is independent of $f(r)$
+
+    \begin{align*}
+        \E[f(r)(W_{r+dr} - W_r)] &= \E[f(r)]\E[W_{r+dr} - W_r] \\
+                                 &= \E[f(r)]\cdot \E[N(0, dr)] \\
+                                 &= \E[f(r)]\cdot 0 \\
+                                 &= 0
+    \end{align*}
+    \break
+    Thus we have that $\E\left[\int_a^b f(r)dW_r\right] = 0$ which extends to $$\E\left[\int_s^t f(r)dW_r | \mathcal{F}_s\right] = 0$$
+    where $\mathcal{F}_s$ represents everything observable until time $s$ and from that we can obtain the following theorem
+
+    \thmr{Martingale Property of the Ito Integral}{}{
+        Provided that $f$ is $W$-adapted (has known values any time until which the Brownian motion is observed)
+        \begin{align*}
+            \E\left[\int_0^t f(r)dW_r | \mathcal{F}_s\right] &= \E\left[\int_s^t f(r)dW_r + \int_0^s f(r)dW_r \vert \mathcal{F}_s\right] \\
+                                                             &= \int_0^s f(r)dW_r
+        \end{align*}
+    }
+    The first integral was shown to have 0 expectation above and the second one is known given $\mathcal{F}_s$.
+    Compute $\E\left[W_3^2 \mid W_1 = 5\right]$
+    We need to express $W_t^2$ as a combination of integrals and use the above properties of expecations. We use
+    Ito's formula on $f(x,y) = y^2$ so that $f(t,W_t) = W_t^2$. $f_x(x,y) = 0$, $f_y(x,y) = 2y$ and $f_{yy}(x,y) = 2$ so
+    by Itô's formula (integral form):
+    \begin{align*}
+        f(t, W_t) - f(s, W_s) &= \int_s^t f_x(r, W_r)dr + \int_s^t f_y(r, W_r)dW_r + \frac{1}{2}\int_s^t f_{yy}(r, W_r)dr \\
+                              &= 0 + \int_s^t 2W_r dW_r + \int_s^t 1dr \\
+                              &= \int_s^t 2W_r dW_r + (t-s)
+    \end{align*}
+    then taking expectations given $\mathcal{F}_s$ we get
+    \begin{align*}
+        \E[W_t^2 \mid \mathcal{F}_s] - \E[W_s^2 \mid \mathcal{F}_s] &= \E\left[\int_s^t 2W_r dW_r \mid \mathcal{F}_s\right] + (t-s) \\
+                                                              &= (t-s) \\
+                                                              &\vdots \\
+        \E[W_t^2 \mid \mathcal{F}_s] &= \E[W_s^2 \mid \mathcal{F}_s] + (t-s) \\
+                                  &= W_s^2 + (t-s) \\
+    \end{align*}
+    \renewcommand{\F}{\mathcal{F}}
+    where the expectation of the first integral is 0 by property of the Itô integral and the expecation of $W_s^2$ given $\F_s$ is
+    just $W_s^2$ because it is known and since $\E[W_3^2 \mid W_1 = 5] = \E[W_2^2 \mid \F_1]$ when $W_1 = 5$ is observed, all we need is
+    to plug in $t=3$, $s=1$ and $W_1 = 5$ into the above equation to get what we need
+    $$
+        \E[W_3^2 \mid W_1 = 5] = 5^2 + (3-1) = 25 + 2 = 27
+    $$
 
 
 \end{document}
