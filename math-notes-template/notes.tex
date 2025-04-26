@@ -842,7 +842,7 @@ $$
     where $\mathcal{F}_s$ represents everything observable until time $s$ and from that we can obtain the following theorem
 
     \thmr{Martingale Property of the Ito Integral}{}{
-        Provided that $f$ is $W$-adapted (has known values any time until which the Brownian motion is observed)
+        Provided that $f$ is $W$-adapted (has known values until any time which the Brownian motion is observed)
         \begin{align*}
             \E\left[\int_0^t f(r)dW_r | \mathcal{F}_s\right] &= \E\left[\int_s^t f(r)dW_r + \int_0^s f(r)dW_r \vert \mathcal{F}_s\right] \\
                                                              &= \int_0^s f(r)dW_r
@@ -873,6 +873,79 @@ $$
     $$
         \E[W_3^2 \mid W_1 = 5] = 5^2 + (3-1) = 25 + 2 = 27
     $$
+
+    \section{Lecture 28}
+
+    Consider a Binomial model with step $h>0$. We study a regime with prices changing very frequently, $h$ is
+    small. We are in the time interval of $[[\frac{s}{h}]h, ([\frac{s}{h}]+1)h]$ where $s$ is a time in the interval.
+    so the price at time $t$ is
+    $$
+    S_t = S_{\left[\frac{t}{h}\right]\cdot h} = S\left(\left[\frac{t}{h}\right]\right) =
+    S\left(\left[\frac{t}{h} - 1\right]\right) \cdot \left(1 + R\left(\left[\frac{t}{h}\right]\right)\right)
+    $$
+    continuing this backward computation we get
+    $$
+    S_t = S_s\cdot e^{X_1 + X_2 + \cdots + X_n}
+    $$
+    where $X_i = \ln\left(1 + R\left(\left[\frac{s}{h}\right] + i\right)\right)$ and $n = \left[\frac{t}{h}\right] - \left[\frac{s}{h}\right] \rightarrow \infty$
+    as $h \rightarrow 0$. The $X_i$ are independent random variables with, lets say, mean $\mu_h$ and variance $\sigma_h^2$.
+
+    so by the central limit theorem:
+
+    $$
+    X_1 + X_2 + \cdots + X_n \sim n\mu_h + \sqrt{n\sigma_h^2}\cdot N(0,1)
+    $$
+
+    when $n$ is large (so when $h$ is small). So our stock price becomes
+
+    \begin{align*}
+        S_t &= S_s \cdot e^{X_1 + X_2 + \cdots + X_n} \\
+            &= S_s \cdot e^{n\mu_h + \sqrt{n\sigma_h^2}\cdot N(0,1)} \\
+    \end{align*}
+    It is natural to define $\mu_h = \mu \cdot h$ and $\sigma_h^2 = \sigma^2 \cdot h$ in which case
+    \begin{align*}
+        S_t &= S_s \cdot e^{nh\mu + \sqrt{nh\sigma^2}\cdot N(0,1)} \\
+            &\stackrel{h \rightarrow 0}{=} S_s \cdot e^{\mu(t-s) + \sigma\sqrt{t-s}\cdot N(0,1)} \\
+            &= S_s \cdot e^{\mu(t-s) + \sigma(W_t - W_s)}
+    \end{align*}
+    for $t \geq s$ where $W_t$ is a Brownian motion, which then reduces to:
+    \defn{Black Scholes Model}{
+        $$S_t = S_0 \cdot e^{\mu t + \sigma W_t}$$
+        for all $t \geq 0$
+    }
+    under the binomail model we worked with a risk-nuetral probability (artificial, not the real-world probability)
+    under which the stock price discounted to time 0 was martingale.
+    \begin{align*}
+        \frac{S(n)}{(1+r_h)^n} &= \frac{(1+U)S(n)p^* + (1+D)S(n)(1-p^*)}{(1+r_h)^{n+1}} \\
+                               &= \frac{\E^{p^*}(S(n)(1+R(n+1)) \mid \mathcal{F}_n)}{(1+r_h)^{n+1}} \\
+                               &= \E^{p^*}\left(\frac{S(n+1)}{(1+r_h)^{n+1}} \mid \F_n\right) \\
+    \end{align*}
+    We want to extend this to the Black-Scholes model, so that
+    $$
+        e^{-rt}S_t = S_0 \cdot e^{(\mu -r)t + \sigma W_t} = f(t, W_t)
+    $$
+is martingale under some risk-neutral probability where in the above $f(x, y) = S_0 e^{(\mu -r})x + \sigma y}$
+We can easily check $f_x(x,y) = (\mu -r)f(x,y)$, $f_y(x,y) = \sigma f(x,y)$ and $f_{yy}(x,y) = \sigma^2 f(x,y)$
+so by Itô's formula we have
+\begin{align*}
+    e^{-rt}S_t &= S_0 + \int_0^t f_x(s, W_s)ds + \int_0^t f_y(s, W_s)dW_s + \frac{1}{2}\int_0^t f_{yy}(s, W_s)ds \\
+               &= S_0 + \int_0^t (\frac{\sigma^2}{2} + \mu - r)f(s, W_s)ds + \sigma \int_0^t f(s, W_s)dW_s  \\
+               &= S_0 + \sigma \int_0^t S_s dW_s + \int_0^t (\frac{\sigma^2}{2} + \mu - r)S_s ds
+\end{align*}
+the first two termas are martingale as it is a constant plus an Itô integral which are martingale. The last term
+is not a martingale because of the $ds$ term, so we must choose the risk-nuetral probability such that
+this term disappears. We can rewrite the above as
+\begin{align*}
+    e^{-rt}S_t &= S_0 + \sigma \int_0^t S_s \cdot d\left(W_s + \left(\frac{\sigma}{2} + \frac{\mu - r}{\sigma}\right)s\right) \\
+               &= S_0 + \sigma \int_0^t S_s \cdot dW_s^*
+\end{align*}
+where $W_s^* = W_s + \left(\frac{\sigma}{2} + \frac{\mu - r}{\sigma}\right)s$, while this is NOT a Brownian motion
+under the real world probability we can take an "artificial" risk nuetral probability under which it is a
+Brownian motion. Then under the risk-nuetral probability we have
+$$
+    e^{-rt}S_t= S_0 + \sigma \int_0^t S_s \cdot dW_s^*
+$$
+which is a martingale as we wanted.
 
 
 \end{document}
